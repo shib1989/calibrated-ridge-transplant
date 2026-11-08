@@ -1,0 +1,13 @@
+# Package versions used for the reported runs were not recorded. Pin them from your own environment before release.
+# Known: mergekit 0.1.5 (batch_omp copied from it), wechsel 0.0.4 (same-language mode, cc.en.300.bin fastText vectors)
+torch
+transformers
+datasets
+numpy
+scipy
+scikit-learn
+matplotlib
+deepfocus      # FOCUS, official implementation
+wechsel==0.0.4 # WECHSEL, official implementation
+fasttext
+mergekit==0.1.5

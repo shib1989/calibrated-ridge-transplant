@@ -1,0 +1,17 @@
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+ & & \multicolumn{4}{c}{CPU (2 threads), s} & \multicolumn{4}{c}{GPU (Tesla T4), s} \\
+\cmidrule(lr){3-6}\cmidrule(lr){7-10}
+Pair & $K$ & OMP-64 & Ridge fixed & Ridge search & Ratio & OMP-64 & Ridge fixed & Ridge search & Ratio \\
+\midrule
+GPT-2 $\leftarrow$ Pythia & 82 & 2.59 & 0.547 & 2.85 & 5$\times$ & 0.16 & 0.043 & 0.12 & 4$\times$ \\
+ & 300 & 9.95 & 0.551 & 2.93 & 18$\times$ & 0.47 & 0.043 & 0.14 & 11$\times$ \\
+ & 1000 & 30.28 & 0.572 & 2.93 & 53$\times$ & 1.58 & 0.043 & 0.14 & 37$\times$ \\
+ & 3000 & 87.62 & 0.573 & 2.96 & 153$\times$ & 5.11 & 0.039 & 0.14 & 131$\times$ \\
+\midrule
+GPT-2 $\leftarrow$ Qwen2.5 & 82 & 3.71 & 0.757 & 4.00 & 5$\times$ & 0.24 & 0.058 & 0.21 & 4$\times$ \\
+ & 300 & 12.66 & 0.766 & 4.01 & 17$\times$ & 0.68 & 0.037 & 0.21 & 18$\times$ \\
+ & 1000 & 37.98 & 0.758 & 3.96 & 50$\times$ & 1.78 & 0.039 & 0.21 & 46$\times$ \\
+ & 3000 & 109.74 & 0.784 & 4.08 & 140$\times$ & 5.61 & 0.039 & 0.21 & 144$\times$ \\
+\bottomrule
+\end{tabular}

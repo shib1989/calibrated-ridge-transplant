@@ -1,0 +1,71 @@
+====================================================================================================
+GPT-2 large <- Qwen2.5-0.5B | seed 1 | 82 new words | dims receiver 1280 / donor 896 | 28512 anchor words | chosen ridge: ridge[freq5000]
+====================================================================================================
+embeddings: tied | mean bytes per evaluation sentence: 169.5
+tokens per sentence containing new words: 40.2 (words split) -> 39.0 (new tokens)
+
+zero-shot  (differences vs the unchanged receiver, nats per sentence; negative = better; * = CI excludes 0)
+method                 sentence NLL  diff vs original          diff, new words only        wiki control  domain control
+mean-subword (raw)           134.88  +7.71 [+7.34, +8.07]*     +5.12 [+4.86, +5.39]*              +0.01         +0.01
+mean-subword (cal)           133.39  +6.22 [+5.87, +6.57]*     +2.91 [+2.70, +3.13]*              +0.20         +0.36
+random (cal)                 144.80  +17.63 [+16.95, +18.37]*  +11.25 [+10.66, +11.86]*           +0.01         +0.01
+OMP-32                       129.40  +2.23 [+1.87, +2.57]*     -0.08 [-0.33, +0.16]               +0.02         +0.53
+OMP-64 as shipped (raw)       131.65  +4.48 [+4.13, +4.83]*     +3.48 [+3.20, +3.76]*              +0.00         +0.01
+OMP-64 centred (raw)         131.98  +4.81 [+4.41, +5.21]*     +3.54 [+3.24, +3.83]*              +0.00         +0.01
+OMP-64 centred (cal)         129.87  +2.70 [+2.30, +3.08]*     +0.76 [+0.50, +1.01]*              +0.01         +0.23
+WECHSEL (raw)                134.03  +6.86 [+6.46, +7.29]*     +4.50 [+4.18, +4.81]*              +0.00         +0.01
+WECHSEL (cal)                131.94  +4.77 [+4.36, +5.21]*     +2.17 [+1.85, +2.46]*              +0.00         +0.18
+LS (cal)                     128.50  +1.33 [+1.05, +1.63]*     -0.42 [-0.64, -0.18]*              +0.02         +0.39
+Procrustes (cal)             129.82  +2.65 [+2.37, +2.96]*     +1.33 [+1.05, +1.60]*              +0.01         +0.14
+SALT-ours (raw)              130.00  +2.83 [+2.46, +3.20]*     +1.08 [+0.86, +1.32]*              +0.01         +0.13
+SALT-ours (cal)              129.98  +2.81 [+2.41, +3.21]*     +0.68 [+0.43, +0.94]*              +0.01         +0.24
+ridge[all]                   128.51  +1.34 [+1.06, +1.64]*     -0.41 [-0.63, -0.17]*              +0.02         +0.39
+ridge[freq5000] *            128.28  +1.11 [+0.84, +1.40]*     -0.03 [-0.25, +0.21]               +0.00         +0.19
+  direct comparisons (sentence NLL difference):
+    ridge[freq5000] - OMP-32: -1.11 [-1.39, -0.84]*   |  bits/byte: -0.0095 [-0.0118, -0.0071]*
+    ridge[freq5000] - OMP-64 centred (raw): -3.70 [-3.97, -3.43]*   |  bits/byte: -0.0315 [-0.0338, -0.0292]*
+    ridge[freq5000] - OMP-64 centred (cal): -1.58 [-1.83, -1.32]*   |  bits/byte: -0.0135 [-0.0155, -0.0112]*
+    ridge[freq5000] - OMP-64 as shipped (raw): -3.37 [-3.64, -3.12]*   |  bits/byte: -0.0287 [-0.0310, -0.0265]*
+    ridge[freq5000] - WECHSEL (raw): -5.75 [-6.11, -5.43]*   |  bits/byte: -0.0489 [-0.0520, -0.0462]*
+    ridge[freq5000] - WECHSEL (cal): -3.66 [-4.03, -3.32]*   |  bits/byte: -0.0311 [-0.0343, -0.0283]*
+    ridge[freq5000] - mean-subword (cal): -5.11 [-5.53, -4.68]*   |  bits/byte: -0.0435 [-0.0471, -0.0398]*
+    ridge[freq5000] - mean-subword (raw): -6.60 [-7.01, -6.20]*   |  bits/byte: -0.0562 [-0.0597, -0.0528]*
+    ridge[freq5000] - LS (cal): -0.22 [-0.34, -0.09]*   |  bits/byte: -0.0019 [-0.0029, -0.0008]*
+    ridge[freq5000] - Procrustes (cal): -1.53 [-1.75, -1.33]*   |  bits/byte: -0.0130 [-0.0149, -0.0113]*
+    ridge[freq5000] - SALT-ours (raw): -1.71 [-1.97, -1.47]*   |  bits/byte: -0.0146 [-0.0167, -0.0125]*
+    ridge[freq5000] - SALT-ours (cal): -1.70 [-1.97, -1.42]*   |  bits/byte: -0.0144 [-0.0168, -0.0121]*
+    OMP-32 - mean-subword (cal): -3.99 [-4.45, -3.56]*   |  bits/byte: -0.0340 [-0.0379, -0.0303]*
+
+after 200 steps training only the new rows  (differences vs the unchanged receiver, nats per sentence; negative = better; * = CI excludes 0)
+method                 sentence NLL  diff vs original          diff, new words only        wiki control  domain control
+mean-subword (raw)           127.74  +0.57 [+0.26, +0.86]*     -0.86 [-1.07, -0.65]*              +0.01         +0.35
+mean-subword (cal)           127.83  +0.66 [+0.36, +0.93]*     -1.06 [-1.24, -0.88]*              +0.05         +0.41
+random (cal)                 131.83  +4.66 [+4.14, +5.21]*     +1.29 [+0.93, +1.69]*              +0.02         +0.40
+OMP-32                       126.99  -0.18 [-0.44, +0.09]      -1.28 [-1.47, -1.10]*              +0.02         +0.48
+OMP-64 as shipped (raw)       127.02  -0.15 [-0.42, +0.14]      -1.07 [-1.28, -0.86]*              +0.01         +0.40
+OMP-64 centred (raw)         126.91  -0.26 [-0.52, +0.02]      -1.14 [-1.35, -0.93]*              +0.01         +0.41
+OMP-64 centred (cal)         126.98  -0.19 [-0.46, +0.09]      -1.24 [-1.42, -1.04]*              +0.02         +0.47
+WECHSEL (raw)                127.63  +0.46 [+0.14, +0.80]*     -0.80 [-1.04, -0.56]*              +0.01         +0.39
+WECHSEL (cal)                127.56  +0.39 [+0.08, +0.72]*     -1.03 [-1.25, -0.82]*              +0.01         +0.43
+LS (cal)                     126.89  -0.29 [-0.51, -0.05]*     -1.36 [-1.54, -1.19]*              +0.01         +0.45
+Procrustes (cal)             127.09  -0.08 [-0.34, +0.20]      -1.22 [-1.43, -1.00]*              +0.02         +0.42
+SALT-ours (raw)              127.02  -0.15 [-0.39, +0.12]      -1.19 [-1.37, -0.99]*              +0.02         +0.43
+SALT-ours (cal)              127.03  -0.14 [-0.38, +0.13]      -1.18 [-1.36, -0.99]*              +0.01         +0.44
+ridge[all]                   126.88  -0.29 [-0.51, -0.06]*     -1.36 [-1.54, -1.19]*              +0.01         +0.46
+ridge[freq5000] *            126.70  -0.47 [-0.72, -0.23]*     -1.33 [-1.51, -1.15]*              +0.01         +0.41
+  direct comparisons (sentence NLL difference):
+    ridge[freq5000] - OMP-32: -0.29 [-0.42, -0.16]*   |  bits/byte: -0.0025 [-0.0036, -0.0014]*
+    ridge[freq5000] - OMP-64 centred (raw): -0.21 [-0.32, -0.10]*   |  bits/byte: -0.0018 [-0.0028, -0.0008]*
+    ridge[freq5000] - OMP-64 centred (cal): -0.28 [-0.40, -0.16]*   |  bits/byte: -0.0024 [-0.0034, -0.0014]*
+    ridge[freq5000] - OMP-64 as shipped (raw): -0.32 [-0.44, -0.20]*   |  bits/byte: -0.0027 [-0.0038, -0.0017]*
+    ridge[freq5000] - WECHSEL (raw): -0.93 [-1.13, -0.74]*   |  bits/byte: -0.0079 [-0.0096, -0.0063]*
+    ridge[freq5000] - WECHSEL (cal): -0.86 [-1.07, -0.68]*   |  bits/byte: -0.0074 [-0.0091, -0.0058]*
+    ridge[freq5000] - mean-subword (cal): -1.13 [-1.38, -0.88]*   |  bits/byte: -0.0096 [-0.0117, -0.0075]*
+    ridge[freq5000] - mean-subword (raw): -1.04 [-1.27, -0.81]*   |  bits/byte: -0.0088 [-0.0108, -0.0069]*
+    ridge[freq5000] - LS (cal): -0.19 [-0.27, -0.10]*   |  bits/byte: -0.0016 [-0.0023, -0.0009]*
+    ridge[freq5000] - Procrustes (cal): -0.39 [-0.52, -0.26]*   |  bits/byte: -0.0033 [-0.0045, -0.0022]*
+    ridge[freq5000] - SALT-ours (raw): -0.32 [-0.45, -0.20]*   |  bits/byte: -0.0028 [-0.0039, -0.0017]*
+    ridge[freq5000] - SALT-ours (cal): -0.33 [-0.46, -0.21]*   |  bits/byte: -0.0028 [-0.0039, -0.0018]*
+    OMP-32 - mean-subword (cal): -0.84 [-1.08, -0.59]*   |  bits/byte: -0.0071 [-0.0092, -0.0050]*
+
+map time for 82 words (s): ridge[all] 6.75, ridge[freq5000] 1.58, OMP-32 (ours, sklearn) 26.66, OMP-64 official (both versions) 0.82, LS 6.72, Procrustes 1.44, SALT-ours 11.13, WECHSEL official (first call per pair builds the whole donor vocabulary) 117.08

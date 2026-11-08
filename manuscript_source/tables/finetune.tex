@@ -1,0 +1,21 @@
+\begin{tabular}{llrrr}
+\toprule
+Pair & Method & Seeds & Accuracy (mean $\pm$ sd) & Macro-F1 \\
+\midrule
+GPT-2 $\leftarrow$ Qwen & \textbf{Ridge, calibrated (ours)} & 3 & 0.7883 $\pm$ 0.0042 & 0.713 \\
+GPT-2 $\leftarrow$ Qwen & FOCUS & 3 & 0.7878 $\pm$ 0.0003 & 0.711 \\
+GPT-2 $\leftarrow$ Qwen & OMP-64, as shipped & 3 & 0.7882 $\pm$ 0.0021 & 0.714 \\
+GPT-2 $\leftarrow$ Qwen & OMP-64, centred inputs & 3 & 0.7862 $\pm$ 0.0025 & 0.712 \\
+GPT-2 $\leftarrow$ Qwen & Subword mean & 3 & 0.7875 $\pm$ 0.0040 & 0.711 \\
+GPT-2 $\leftarrow$ Qwen & Mean fill & 3 & 0.7837 $\pm$ 0.0008 & 0.707 \\
+GPT-2 $\leftarrow$ Qwen & Native tokenizer (reference) & 3 & 0.7900 $\pm$ 0.0030 & 0.717 \\
+\midrule
+GPT-2 $\leftarrow$ Pythia & \textbf{Ridge, calibrated (ours)} & 5 & 0.7917 $\pm$ 0.0015 & 0.719 \\
+GPT-2 $\leftarrow$ Pythia & FOCUS & 4 & 0.7915 $\pm$ 0.0023 & 0.719 \\
+GPT-2 $\leftarrow$ Pythia & OMP-64, as shipped & 4 & 0.7899 $\pm$ 0.0019 & 0.716 \\
+GPT-2 $\leftarrow$ Pythia & OMP-64, centred inputs & 5 & 0.7889 $\pm$ 0.0028 & 0.715 \\
+GPT-2 $\leftarrow$ Pythia & Subword mean & 5 & 0.7914 $\pm$ 0.0027 & 0.718 \\
+GPT-2 $\leftarrow$ Pythia & Mean fill & 5 & 0.7887 $\pm$ 0.0020 & 0.715 \\
+GPT-2 $\leftarrow$ Pythia & Native tokenizer (reference) & 5 & 0.7902 $\pm$ 0.0030 & 0.718 \\
+\bottomrule
+\end{tabular}
