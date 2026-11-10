@@ -1,5 +1,5 @@
-Closed-form calibrated ridge initialises new token embeddings
-Lower NLL than official OMP-64 in 32 of 32 vocabulary-expansion comparisons
-Mapping step up to 150 times faster than official OMP, same device
-Official OMP fails on GPT-2 receivers unless its inputs are centred
-Competitive with six baselines up to 1.5B parameters; no downstream gain
+Lower NLL than centred official OMP-64 in 23 of 24 expansion comparisons
+Better than learned initialisers (AweDist, TokDist) in 39 of 40 comparisons
+Mapping step up to 150 times faster than official OMP-64 on the same device
+Official OMP fails on GPT-2 receivers unless its inputs are mean-centred
+A closed-form, centred, calibrated ridge map initialises new token embeddings

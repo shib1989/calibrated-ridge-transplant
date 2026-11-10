@@ -1,47 +1,67 @@
 # Calibrated ridge maps for token-embedding transplantation: code and results
 
 Code, notebooks and result files for the manuscript "Calibrated Ridge Maps for Token-Embedding Transplantation Across Language Models".
-Corresponding author: Shibdas Bhattacharya (23dp0094@iitism.ac.in).
+Author: Shibdas Bhattacharya (23dp0094@iitism.ac.in), IIT (ISM) Dhanbad. Supervisor: Prof. Haider Banka.
+Licence: MIT (see `LICENSE`). Citation: see `CITATION.cff`.
 
-> Status: draft package prepared for upload to a public repository. Licence, repository URL and DOI are to be filled in by the authors.
+## What the method is
+A new token is given an embedding by a linear map fitted on anchor tokens shared by the two vocabularies: ridge regression on mean-centred anchors (direction only), plus one length `c` chosen from a fixed grid by the receiver's loss on calibration sentences. Two anchor sets are tried (all anchors, the 5000 most frequent) and the training objective picks one. The least-squares baseline in the paper shares the centring, direction fitting and calibrated length, so ridge differs only by the penalty and, for the frequency-selected variant, the anchor subset.
 
 ## Layout
-- `notebooks/` one notebook per experiment (Kaggle or Colab, one GPU; run top to bottom; each writes `.pkl` result files).
-- `results/` the result files behind the tables (`runs16/` the 16 real-vocabulary runs; `v5_small_and_scale/` the seven PubMed seed-1 pairs; `other/` least squares versus ridge anchor sweep). Qwen2.5-1.5B exists only as its printed report (the per-sentence file was not kept).
-- `REPRODUCE.md` environment, checkpoints, preprocessing, hyperparameters, seeds, rerun check, table-to-script map.
-- `analysis/` scripts that turn result files into tables and statistics (run from inside `analysis/`).
-- `manuscript_source/` LaTeX source, tables and figures (`main.tex`, build with `latexmk -pdf main.tex`).
-
-## Which notebook gives which table
-(Assigned from the notebook names and our run history; check each row before release.)
-
-| Manuscript part | Notebook |
+| Folder | Content |
 |---|---|
-| Real vocabulary expansion, 16 runs; OMP-64 official and centred | `real_vocab_transplant_domain_v3_official_omp64.ipynb` |
-| Official WECHSEL (Table 3) | `real_vocab_transplant_domain_v4_wechsel.ipynb` |
-| Seven-pair comparison (Table 4): four small pairs | `real_vocab_transplant_v5_main.ipynb` |
-| GPT-2 large | `real_vocab_transplant_v5_scale.ipynb` |
-| Pythia-1B (untied) | `real_vocab_transplant_v5_scale_pythia1b.ipynb` |
-| Qwen2.5-1.5B | `real_vocab_transplant_v5_scale_qwen15b.ipynb` |
-| Zero-shot tokenizer swap | `exp4_v2_fair_official_baselines.ipynb` |
-| Ablations | `ablation_ridge_v1.ipynb`, `ablation_ridge_v1_gpt2.ipynb` |
-| Downstream fine-tuning / frozen probe | `exp5b_downstream_pubmed_rct.ipynb`, `exp5c_frozen_probe.ipynb` |
-| Scarce anchors (least squares versus ridge) | `ls_vs_ridge_anchor_sweep.ipynb`, `ls_vs_ridge_nll_sweep_v2.ipynb` |
-| Mapping time (same device) | `speed_benchmark_ridge_vs_omp.ipynb` |
-| float32 versus float64 directions | `ridge_fp32_vs_fp64_check.ipynb` |
+| `notebooks/` | one notebook per experiment (Kaggle, one or two T4 GPUs; run top to bottom; each writes `.pkl`/`.json` results) |
+| `results/` | the result files behind every table (see below) |
+| `analysis/` | scripts that turn result files into tables, statistics and figures; defaults are repo-relative, outputs go to `analysis/out_*` or to `$OUT` |
+| `manuscript_source/` | LaTeX source of the paper with tables, figures and the statistics JSON files (`latexmk -pdf main.tex`) |
+| `REPRODUCE.md` | environment, checkpoints, preprocessing, hyper-parameters, seeds, statistics, table-to-script map |
 
-## Reproducing the statistics
+## Results folders
+| Folder | Content | Used for |
+|---|---|---|
+| `results/v6_trainonly/` | 17 PubMed runs, word rule uses training text only (12 small-pair runs, seeds 0 to 2; GPT-2 large, Pythia-1B, Qwen2.5-1.5B) | main real-vocabulary tables, scale tables |
+| `results/abstract_ids/` | abstract of every evaluation sentence (v6 and arXiv) | abstract-level bootstrap |
+| `results/v9_learned/` | AweDist (official) and TokDist (ours) with ridge, five tied pairs, seed 1 | learned-baseline table |
+| `results/control_ls_freq5000/` | least squares on the same 5000 anchors, four small pairs, seed 0 | control table, ridge-vs-LS figure |
+| `results/arxiv/` | arXiv second domain, four small pairs, seed 0, and the 3621 abstracts | arXiv table |
+| `results/v10_7b/` | Qwen2.5-7B zero-shot, seed 1 | 7B table |
+| `results/downstream_med_abstracts/` | medical-abstract classification after tokenizer swap | downstream table |
+| `results/runs16/`, `results/v5_small_and_scale/`, `results/other/` | earlier runs (sentence-selected words), scarce-anchor sweep | earlier tables, appendix |
+| `results/awedist_25snippets/` | error log of the AweDist default (25 snippets) attempt | explains why 5 snippets are used |
+| `results/environment*.json`, `environment_pip_freeze_kaggle.txt` | recorded environments | reproducibility |
+
+## Notebook map
+| Notebook | Produces |
+|---|---|
+| `real_vocab_transplant_v6_trainonly` | main PubMed runs (training-only word rule) |
+| `recover_abstract_ids_v6`, `recover_abstract_ids` | abstract ids of the evaluation sentences |
+| `real_vocab_transplant_v5_main`, `_v5_scale`, `_v5_scale_pythia1b`, `_v5_scale_qwen15b` | earlier seven-pair and larger-receiver runs |
+| `real_vocab_transplant_domain_v3_official_omp64`, `_v4_wechsel` | earlier 16-run set; official WECHSEL |
+| `real_vocab_transplant_v7_tokdist`, `_v8_awedist` | precursors of v9 (TokDist; AweDist official, 5 snippets) |
+| `real_vocab_transplant_v8b_awedist_defaults` | AweDist with its default 25 snippets: fails on our 2800 training abstracts (not enough snippets; log in `results/awedist_25snippets/`) |
+| `real_vocab_transplant_v9_learned` | reported learned-baseline results |
+| `control_ls_freq5000` | least-squares control on 5000 anchors |
+| `real_vocab_transplant_v6_arxiv`, `recover_abstract_ids_arxiv` | arXiv domain |
+| `real_vocab_transplant_v10_7b_zeroshot` | Qwen2.5-7B, fp16 over two T4 GPUs |
+| `exp4_v2_fair_official_baselines` | zero-shot tokenizer swap with official baselines |
+| `exp5b_downstream_pubmed_rct`, `exp5c_frozen_probe`, `downstream_med_abstracts` | downstream tasks |
+| `ablation_ridge_v1`, `_gpt2` | ablations (earlier word rule) |
+| `ls_vs_ridge_anchor_sweep`, `ls_vs_ridge_nll_sweep_v2` | scarce-anchor sweep |
+| `speed_benchmark_ridge_vs_omp`, `ridge_fp32_vs_fp64_check`, `capture_environment` | timing, precision check, environment record |
+
+## Rebuilding the tables
 ```
 cd analysis
-python stats16.py          # Holm over the 32 comparisons with centred OMP-64 (16 runs)
-python stats_family.py     # Holm over the 98 comparisons of Table 4, equivalence check
-python make_v5_tables.py   # tables/scale_*.tex from the seven-pair results
-python make_realvocab_v3.py  # 16-run summary (writes to /tmp/rv and tables/)
+python make_v6_tables.py        # main, scale, learned-baseline and downstream tables + stats_v6.json
+python make_ctl_arxiv_tables.py # control and arXiv tables
+python make_7b_table.py         # 7B table
+python make_fig_ls_decomp.py    # ridge-vs-least-squares figure
 ```
-Intervals are paired percentile bootstraps over evaluation sentences (5000 resamples). Sentences are not grouped by abstract, because the result files do not store abstract identifiers.
+The output of these four scripts matches the tables in `manuscript_source/tables/` byte for byte. Intervals are 95 % paired percentile bootstraps over evaluation abstracts (all sentences of an abstract are resampled together); Holm correction uses a normal approximation to the bootstrap distribution. Earlier tables (sentence bootstrap, `stats16.py`, `stats_family.py`) are kept for the earlier runs.
 
-## Notes and known limits
-- Package versions of the reported runs were not recorded; `notebooks/capture_environment.ipynb` records the current environment (see `REPRODUCE.md`).
-- SALT-ours, LS, Procrustes and OMP-32 are our own implementations, not official code. FOCUS, WECHSEL and OMP-64 (mergekit `batch_omp`) are the official implementations.
-- Results are single seeds for the three larger receivers; seeds resample sentences and training batches, not words or abstracts.
-- The mapping-time lines printed inside the real-vocabulary notebooks compare CPU float64 ridge with GPU OMP and must not be used for speed claims; use `speed_benchmark_ridge_vs_omp.ipynb`.
+## Known limits
+- Receivers of 125M to 1.5B parameters, plus one 7B receiver tested zero-shot only; English text; PubMed (three seeds for small pairs) and arXiv (four pairs, one seed).
+- At 1B parameters and above no initialisation, ridge included, beat leaving the words split.
+- Seeds resample sentences and training batches; words, anchors and the text split are fixed.
+- SALT-ours, LS, Procrustes, OMP-32 and TokDist are our implementations. FOCUS, WECHSEL, OMP-64 (mergekit 0.1.5 `batch_omp`, copied verbatim) and AweDist (authors' script) are official code.
+- Checkpoints are loaded from the `main` branch of the Hugging Face hub without pinned revisions.

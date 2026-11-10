@@ -1,0 +1,10 @@
+\begin{tabular}{lrrrrr}
+\toprule
+Receiver $\leftarrow$ donor & New words & Split & New tokens & Saved (\%) & Saved tokens/byte \\
+\midrule
+GPT-2, OPT-125m $\leftarrow$ Pythia-160m & 300 & 37.3 & 35.1 & 6.0 & 0.014 \\
+GPT-2, OPT-125m, GPT-2 large $\leftarrow$ Qwen2.5-0.5B & 126 & 40.4 & 39.2 & 3.0 & 0.007 \\
+Pythia-1B $\leftarrow$ Qwen2.5-0.5B & 52 & 38.4 & 37.3 & 3.0 & 0.007 \\
+Qwen2.5-1.5B $\leftarrow$ Pythia-410m & 300 & 39.6 & 37.7 & 4.9 & 0.012 \\
+\bottomrule
+\end{tabular}

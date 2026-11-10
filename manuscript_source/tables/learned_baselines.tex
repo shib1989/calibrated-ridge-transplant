@@ -1,0 +1,20 @@
+\begin{tabular}{llrrrr}
+\toprule
+Pair & Steps & AweDist (official) & AweDist, cal. & TokDist (ours) & TokDist, cal. \\
+\midrule
+GPT-2 $\leftarrow$ Pythia-160m & 0 & $-$8.72$^{*}$$^{\dagger}$ & $-$8.65$^{*}$$^{\dagger}$ & $-$523$^{*}$$^{\dagger}$ & $-$19.67$^{*}$$^{\dagger}$ \\
+ & 200 & $-$2.30$^{*}$$^{\dagger}$ & $-$2.47$^{*}$$^{\dagger}$ & $-$2.20$^{*}$$^{\dagger}$ & $-$2.35$^{*}$$^{\dagger}$ \\
+\addlinespace
+GPT-2 $\leftarrow$ Qwen2.5-0.5B & 0 & $-$6.19$^{*}$$^{\dagger}$ & $-$5.75$^{*}$$^{\dagger}$ & $-$97.15$^{*}$$^{\dagger}$ & $-$10.65$^{*}$$^{\dagger}$ \\
+ & 200 & $-$1.06$^{*}$$^{\dagger}$ & $-$1.29$^{*}$$^{\dagger}$ & $-$0.70$^{*}$$^{\dagger}$ & $-$0.73$^{*}$$^{\dagger}$ \\
+\addlinespace
+OPT-125m $\leftarrow$ Pythia-160m & 0 & $-$6.25$^{*}$$^{\dagger}$ & $-$5.60$^{*}$$^{\dagger}$ & $-$0.94$^{*}$$^{\dagger}$ & $-$0.42$^{*}$$^{\dagger}$ \\
+ & 200 & $-$2.82$^{*}$$^{\dagger}$ & $-$2.24$^{*}$$^{\dagger}$ & $-$0.44$^{*}$$^{\dagger}$ & $-$0.18 \\
+\addlinespace
+OPT-125m $\leftarrow$ Qwen2.5-0.5B & 0 & $-$5.09$^{*}$$^{\dagger}$ & $-$4.57$^{*}$$^{\dagger}$ & $-$1.09$^{*}$$^{\dagger}$ & $-$1.06$^{*}$$^{\dagger}$ \\
+ & 200 & $-$1.22$^{*}$$^{\dagger}$ & $-$1.18$^{*}$$^{\dagger}$ & $-$0.28$^{*}$$^{\dagger}$ & $-$0.24$^{*}$$^{\dagger}$ \\
+\addlinespace
+GPT-2 large $\leftarrow$ Qwen2.5-0.5B & 0 & $-$6.58$^{*}$$^{\dagger}$ & $-$5.44$^{*}$$^{\dagger}$ & $-$1.79$^{*}$$^{\dagger}$ & $-$1.45$^{*}$$^{\dagger}$ \\
+ & 200 & $-$1.87$^{*}$$^{\dagger}$ & $-$1.38$^{*}$$^{\dagger}$ & $-$0.28$^{*}$$^{\dagger}$ & $-$0.25$^{*}$$^{\dagger}$ \\
+\bottomrule
+\end{tabular}

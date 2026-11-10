@@ -4,13 +4,13 @@
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 Ridge minus & Median & Range & CI$<0$ & Median & Range & CI$<0$ \\
 \midrule
-OMP-64, centred inputs (official) & $-$1.74 & $-$3.33 to $-$1.11 & 16/16 & $-$0.50 & $-$0.86 to $-$0.13 & 16/16 \\
-OMP-64, centred, calibrated length & $-$1.18 & $-$1.50 to $-$0.79 & 16/16 & $-$0.57 & $-$0.82 to $-$0.30 & 16/16 \\
-OMP-64, as shipped (official) & $-$238 & $-$3306 to $-$0.91 & 16/16 & $-$0.67 & $-$86.6 to $-$0.36 & 16/16 \\
-OMP-32, centred (our scikit-learn) & $-$1.03 & $-$1.27 to $-$0.12 & 13/16 & $-$0.44 & $-$0.68 to $-$0.05 & 15/16 \\
-Mean of word pieces (calibrated) & $-$6.51 & $-$8.90 to $-$4.79 & 16/16 & $-$2.18 & $-$3.21 to $-$0.94 & 16/16 \\
+OMP-64, centred inputs (official) & $-$2.14 & $-$3.23 to $-$1.25 & 12/12 & $-$0.56 & $-$0.84 to $-$0.05 & 11/12 \\
+OMP-64, centred, calibrated length & $-$1.30 & $-$1.50 to $-$1.02 & 12/12 & $-$0.57 & $-$0.73 to $-$0.45 & 12/12 \\
+OMP-64, as shipped (official) & $-$230 & $-$3526 to $-$1.02 & 12/12 & $-$0.64 & $-$96.6 to $-$0.48 & 12/12 \\
+OMP-32, centred (our scikit-learn) & $-$0.90 & $-$1.20 to $-$0.23 & 12/12 & $-$0.44 & $-$0.64 to $-$0.19 & 11/12 \\
+Mean of word pieces (calibrated) & $-$5.99 & $-$8.87 to $-$4.84 & 12/12 & $-$1.83 & $-$2.64 to $-$1.11 & 12/12 \\
 \midrule
-\multicolumn{7}{l}{Zero-shot, ridge vs.\ unchanged receiver: better in 4, level in 3, worse in 9 of 16 runs} \\
-\multicolumn{7}{l}{After 200 steps, ridge vs.\ unchanged receiver: better in 13, level in 3, worse in 0 of 16 runs} \\
+\multicolumn{7}{l}{Zero-shot, ridge vs.\ unchanged receiver: better in 0, level in 3, worse in 9 of 12 runs} \\
+\multicolumn{7}{l}{After 200 steps, ridge vs.\ unchanged receiver: better in 9, level in 2, worse in 1 of 12 runs} \\
 \bottomrule
 \end{tabular}

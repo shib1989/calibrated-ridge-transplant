@@ -1,42 +1,30 @@
-"""Builds tables/scale_baselines.tex and tables/scale_bpb.tex from the v5 pkls (4 small pairs, GPT-2 large, Pythia-1B) and the printed Qwen2.5-1.5B report."""
+"""Builds tables/scale_baselines.tex, scale_ci_a/b.tex and scale_bpb.tex from the seven v5 pkls. Intervals: percentile bootstrap resampling ABSTRACTS (ids in ../results/abstract_ids)."""
 import pickle, re, numpy as np
+from cluster_boot import ids_for
 A="../results/v5_small_and_scale/"
 PK=[("GPT-2 $\\leftarrow$ Pythia-160m","pubmed__GPT-2_from_Pythia-160m__seed1.pkl"),
     ("GPT-2 $\\leftarrow$ Qwen2.5-0.5B","pubmed__GPT-2_from_Qwen2.5-0.5B__seed1.pkl"),
     ("OPT-125m $\\leftarrow$ Pythia-160m","pubmed__OPT-125m_from_Pythia-160m__seed1.pkl"),
     ("OPT-125m $\\leftarrow$ Qwen2.5-0.5B","pubmed__OPT-125m_from_Qwen2.5-0.5B__seed1.pkl"),
     ("GPT-2 large $\\leftarrow$ Qwen2.5-0.5B","pubmed__GPT-2_large_from_Qwen2.5-0.5B__seed1.pkl"),
-    ("Pythia-1B (untied) $\\leftarrow$ Qwen2.5-0.5B","pubmed__Pythia-1B_from_Qwen2.5-0.5B__seed1.pkl")]
+    ("Pythia-1B (untied) $\\leftarrow$ Qwen2.5-0.5B","pubmed__Pythia-1B_from_Qwen2.5-0.5B__seed1.pkl"),
+    ("Qwen2.5-1.5B $\\leftarrow$ Pythia-410m","pubmed__Qwen2.5-1.5B_from_Pythia-410m__seed1.pkl")]
 BASE=[("OMP-64 centred (cal)","OMP-64c cal."),("OMP-64 as shipped (raw)","OMP-64s"),("LS (cal)","LS"),("Procrustes (cal)","Procrustes"),("SALT-ours (cal)","SALT-ours"),("WECHSEL (cal)","WECHSEL"),("original","Unch.")]
 rng=np.random.default_rng(0)
-def boot(df,B=5000):
-    n=len(df); idx=rng.integers(0,n,(B,n)); m=df[idx].mean(1); return df.mean(),np.percentile(m,2.5),np.percentile(m,97.5)
+def boot(df,ids,B=5000):
+    u,inv=np.unique(ids,return_inverse=True); sm=np.bincount(inv,weights=df); c=np.bincount(inv).astype(float); k=len(u)
+    draw=rng.integers(0,k,(B,k)); m=sm[draw].sum(1)/c[draw].sum(1); return df.mean(),np.percentile(m,2.5),np.percentile(m,97.5)
 R={}   # R[pair][step][base]=(mean,lo,hi,bpb)
 for nm,f in PK:
-    d=pickle.load(open(A+f,'rb')); c=d['curves']; sel=d['sel']; nb=c[sel][0]['t_eval']['nbytes'].mean()
+    d=pickle.load(open(A+f,'rb')); c=d['curves']; sel=d['sel']; ids=ids_for('v5_small_and_scale',f); nb=c[sel][0]['t_eval']['nbytes'].mean()
     R[nm]={}
     for st in (0,200):
         R[nm][st]={}
         for b,_ in BASE:
             o=c['original'][0]['t_eval']['tot'] if b=='original' else c[b][st]['t_eval']['tot']
-            df=c[sel][st]['t_eval']['tot']-o; m,lo,hi=boot(df); R[nm][st][b]=(m,lo,hi,m/np.log(2)/nb)
+            df=c[sel][st]['t_eval']['tot']-o; m,lo,hi=boot(df,ids); R[nm][st][b]=(m,lo,hi,m/np.log(2)/nb)
     R[nm]['sel']=sel; R[nm]['K']=d['K']
-# Qwen2.5-1.5B from the printed report
-txt=open(A+"qwen2.5-1.5B_from_pythia-410m_printed_report.txt").read().split("\n")
-nm="Qwen2.5-1.5B $\\leftarrow$ Pythia-410m"; R[nm]={'sel':'ridge[freq5000]','K':300}
-key={"OMP-64 centred (cal)":"OMP-64 centred (cal)","OMP-64 as shipped (raw)":"OMP-64 as shipped (raw)","LS (cal)":"LS (cal)","Procrustes (cal)":"Procrustes (cal)","SALT-ours (cal)":"SALT-ours (cal)","WECHSEL (cal)":"WECHSEL (cal)"}
-def num(s): return float(s.replace('+',''))
-for st,(a,b) in {0:(23,40),200:(55,70)}.items():
-    R[nm][st]={}
-    blk=txt[a-1:b]
-    for line in blk:
-        m=re.match(r"\s+ridge\[freq5000\] - (.+?): ([+-][\d.]+) \[([+-][\d.]+), ([+-][\d.]+)\]\*?\s+\|\s+bits/byte: ([+-][\d.]+)",line)
-        if m and m.group(1) in key: R[nm][st][m.group(1)]=(num(m.group(2)),num(m.group(3)),num(m.group(4)),num(m.group(5)))
-# vs original from the table row
-for st,ln in ((0,23),(200,55)):
-    m=re.search(r"ridge\[freq5000\] \*\s+[\d.]+\s+([+-][\d.]+) \[([+-][\d.]+), ([+-][\d.]+)\]",txt[ln-1]); nb=161.4
-    R[nm][st]["original"]=(num(m.group(1)),num(m.group(2)),num(m.group(3)),num(m.group(1))/np.log(2)/nb)
-ORDER=[p for p,_ in PK]+[nm]
+ORDER=[p for p,_ in PK]
 def sg(x): return ("$+$" if x>0 else "$-$")+f"{abs(x):.2f}"
 def cell(t): 
     m,lo,hi,_=t; s="*" if (lo>0 or hi<0) else ""
