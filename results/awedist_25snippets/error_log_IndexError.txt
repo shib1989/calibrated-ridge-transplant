@@ -1,0 +1,91 @@
+Fetching data...
+Data fetch time: 0.0024 seconds
+Init time for Aho-Corasick: 0.0017169959992315853
+Collection for 1000 done in 0.2396 seconds
+----Summary for processed 1500 documents
+Num tokens with enough snippets: 0
+Hot patterns: 300 | new num snippets: 7911
+Collected counts [(2, 2), (4, 1), (5, 1), (6, 3), (7, 1), (8, 7), (9, 4), (10, 6), (11, 7), (12, 13), (13, 13), (14, 12), (15, 12), (16, 16), (17, 15), (18, 11), (19, 11), (20, 11), (21, 8), (22, 16), (23, 6), (24, 10), (25, 3), (26, 9), (27, 5), (28, 5), (29, 5), (30, 6), (31, 6), (32, 4)]
+Num tokens with least snippets (2): 2
+Num tokens with fewer than 50 snippets: 267
+Example tokens with least snippets: [['Ġendoth', 'el', 'ium'], ['Ġmicro', 'g']]
+Total time for 2 iterations: 0.3649 seconds
+
+
+--------------
+Starting iteration 2 with 2000 documents
+
+----------
+Fetching data...
+
+s/s]
+Saving the dataset (1/1 shards): 100%|██████████| 2800/2800 [00:00<00:00, 419265.69 examples/s]
+Saving the dataset (1/1 shards): 100%|██████████| 2800/2800 [00:00<00:00, 411019.19 examples/s]
+
+  0%|          | 0/500 [00:00<?, ?it/s]
+ 87%|████████▋ | 437/500 [00:00<00:00, 4358.25it/s]
+                                                   
+
+  0%|          | 0/1000 [00:00<?, ?it/s]
+ 42%|████▏     | 421/1000 [00:00<00:00, 4206.90it/s]
+ 84%|████████▍ | 842/1000 [00:00<00:00, 4143.87it/s]
+                                                    
+Traceback (most recent call last):
+  File "/tmp/awedist_work/awedist/apply_embedding_init.py", line 572, in <module>
+    Fire(main)
+    ~~~~^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/fire/core.py", line 135, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/usr/local/lib/python3.13/dist-packages/fire/core.py", line 468, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+                                ~~~~~~~~~~~~~~~~~~~^
+        component,
+        ^^^^^^^^^^
+    ...<2 lines>...
+        treatment='class' if is_class else 'routine',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        target=component.__name__)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/tmp/awedist_work/awedist/apply_embedding_init.py", line 201, in main
+    collected_snippets = collect_snippets_with_patterns_from_dataset(
+        patterns_ids, source_tokenizer_fast, dataset, stopping_condition=stopping_cond
+    )
+  File "/tmp/awedist_work/awedist/ahocorasick.py", line 187, in collect_snippets_with_patterns_from_dataset
+    batch = dataset.take(proc_bs)["tokens"]
+            ~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 4687, in take
+    return self.select(range(n))
+           ~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 575, in wrapper
+    out: Union["Dataset", "DatasetDict"] = func(self, *args, **kwargs)
+                                           ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/fingerprint.py", line 468, in wrapper
+    out = func(dataset, *args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 4419, in select
+    return self._select_contiguous(start, length, new_fingerprint=new_fingerprint)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 575, in wrapper
+    out: Union["Dataset", "DatasetDict"] = func(self, *args, **kwargs)
+                                           ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/fingerprint.py", line 468, in wrapper
+    out = func(dataset, *args, **kwargs)
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 4480, in _select_contiguous
+    _check_valid_indices_value(start + length - 1, len(self))
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/datasets/arrow_dataset.py", line 637, in _check_valid_indices_value
+    raise IndexError(f"Index {index} out of range for dataset of size {size}.")
+IndexError: Index 1999 out of range for dataset of size 1300.
+
+!!! failed: RuntimeError: official AweDist script failed (output above)
+Traceback (most recent call last):
+  File "/tmp/ipykernel_115/2499563420.py", line 7, in <cell line: 0>
+    res = run_pair(pair, SEED)
+  File "/tmp/ipykernel_115/3146415783.py", line 60, in run_pair
+    rows["AweDist (official)"], aw_s, aw_got = awedist_official_rows(pair, rec_tok, terms, abstracts[:n_tr], piece_ids, E); calib_s["AweDist (official)"] = aw_s; aw_info = dict(covered=aw_got, K=K, commit=AW_COMMIT, lr=AW_LR, snippet_num=AW_SNIPPETS, epochs=AW_EPOCHS, secs=aw_s)
+                                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/ipykernel_115/957601775.py", line 22, in awedist_official_rows
+    print(r.stdout[-2500:]); print(r.stderr[-3500:]); raise RuntimeError("official AweDist script failed (output above)")
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: official AweDist script failed (output above)
