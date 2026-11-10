@@ -1,5 +1,0 @@
-Lower NLL than centred official OMP-64 in 23 of 24 expansion comparisons
-Better than learned initialisers (AweDist, TokDist) in 39 of 40 comparisons
-Mapping step up to 150 times faster than official OMP-64 on the same device
-Official OMP fails on GPT-2 receivers unless its inputs are mean-centred
-A closed-form, centred, calibrated ridge map initialises new token embeddings
