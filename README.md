@@ -13,7 +13,6 @@ A new token is given an embedding by a linear map fitted on anchor tokens shared
 | `notebooks/` | one notebook per experiment (Kaggle, one or two T4 GPUs; run top to bottom; each writes `.pkl`/`.json` results) |
 | `results/` | the result files behind every table (see below) |
 | `analysis/` | scripts that turn result files into tables, statistics and figures; defaults are repo-relative, outputs go to `analysis/out_*` or to `$OUT` |
-| `manuscript_source/` | LaTeX source of the paper with tables, figures and the statistics JSON files (`latexmk -pdf main.tex`) |
 | `REPRODUCE.md` | environment, checkpoints, preprocessing, hyper-parameters, seeds, statistics, table-to-script map |
 
 ## Results folders
@@ -57,7 +56,7 @@ python make_ctl_arxiv_tables.py # control and arXiv tables
 python make_7b_table.py         # 7B table
 python make_fig_ls_decomp.py    # ridge-vs-least-squares figure
 ```
-The output of these four scripts matches the tables in `manuscript_source/tables/` byte for byte. Intervals are 95 % paired percentile bootstraps over evaluation abstracts (all sentences of an abstract are resampled together); Holm correction uses a normal approximation to the bootstrap distribution. Earlier tables (sentence bootstrap, `stats16.py`, `stats_family.py`) are kept for the earlier runs.
+The output of these four scripts matches the tables in the manuscript byte for byte. Intervals are 95 % paired percentile bootstraps over evaluation abstracts (all sentences of an abstract are resampled together); Holm correction uses a normal approximation to the bootstrap distribution. Earlier tables (sentence bootstrap, `stats16.py`, `stats_family.py`) are kept for the earlier runs.
 
 ## Known limits
 - Receivers of 125M to 1.5B parameters, plus one 7B receiver tested zero-shot only; English text; PubMed (three seeds for small pairs) and arXiv (four pairs, one seed).

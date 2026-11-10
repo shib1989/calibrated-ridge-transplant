@@ -58,8 +58,8 @@ Checkpoints and datasets are loaded from the `main` branch without a pinned revi
 ## 7. Which script produces which table or figure
 | Output | Source |
 |---|---|
-| Table with 16 runs (Table 2), Fig. real vocabulary | `analysis/make_realvocab_v3.py` and `manuscript_source/make_assets.py` on `results/runs16/` |
-| WECHSEL table | `manuscript_source/make_assets.py` (from the WECHSEL notebook results) |
+| Table with 16 runs (Table 2), Fig. real vocabulary | `analysis/make_realvocab_v3.py` on `results/runs16/` (the plotting helper `make_assets.py` is released with the paper source after acceptance) |
+| WECHSEL table | `make_assets.py` (released with the paper source after acceptance) |
 | Seven-pair table, intervals, bits per byte | `analysis/make_v5_tables.py` on `results/v5_small_and_scale/` |
 | Holm over 32 and 98 comparisons, equivalence | `analysis/stats16.py`, `analysis/stats_family.py` |
 | Scarce-anchor figure and table | `notebooks/ls_vs_ridge_*` and `results/other/ls_vs_ridge_anchor_sweep.json` |
