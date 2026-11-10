@@ -1,0 +1,19 @@
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & \multicolumn{2}{c}{GPT-2$\leftarrow$Pythia} & \multicolumn{2}{c}{GPT-2$\leftarrow$Qwen2.5} & \multicolumn{2}{c}{GPT-2 med.$\leftarrow$Pythia} & \multicolumn{2}{c}{Qwen2.5$\leftarrow$GPT-2} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Method & Dom & Gen & Dom & Gen & Dom & Gen & Dom & Gen \\
+\midrule
+Unchanged model (own tokenizer)$^{\dagger}$ & 124.3 & 133.2 & 124.3 & 133.2 & 113.6 & 125.4 & 106.4 & 121.4 \\
+\midrule
+OMP-64, as shipped & 7711.0 & 7343.8 & 3682.8 & 3364.4 & 6565.0 & 6147.1 & 129.8 & 129.1 \\
+OMP-64, centred inputs & 135.8 & 142.3 & 163.0 & 161.2 & 127.8 & 134.8 & \textbf{128.5} & \textbf{128.1} \\
+FOCUS & 144.9 & 144.0 & 179.1 & 170.3 & 141.5 & 137.3 & 165.3 & 159.6 \\
+Subword mean & 146.6 & 148.9 & 192.0 & 186.7 & 136.8 & 139.9 & 171.4 & 157.9 \\
+Mean & 155.4 & 144.2 & 187.5 & 167.3 & 150.2 & 137.6 & 226.9 & 219.8 \\
+John Hewitt & 159.1 & 150.3 & 200.7 & 184.3 & 154.3 & 142.7 & 149.4 & 144.1 \\
+Common interpolation & 157.8 & 144.3 & 182.8 & 164.9 & 151.1 & 137.4 & 138.4 & 134.0 \\
+Ridge, uncalibrated length & 137.2 & 142.1 & 161.7 & 159.9 & 129.5 & 134.7 & 131.1 & 129.0 \\
+\textbf{Ridge, calibrated (ours)} & \textbf{135.0} & \textbf{142.0} & \textbf{159.5} & \textbf{159.6} & \textbf{127.6} & \textbf{134.5} & 130.3 & 128.2 \\
+\bottomrule
+\end{tabular}

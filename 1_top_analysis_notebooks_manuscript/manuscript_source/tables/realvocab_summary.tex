@@ -1,0 +1,16 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Zero-shot} & \multicolumn{3}{c}{After 200 steps} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Ridge minus & Median & Range & CI$<0$ & Median & Range & CI$<0$ \\
+\midrule
+OMP-64, centred inputs (official) & $-$2.14 & $-$3.23 to $-$1.25 & 12/12 & $-$0.56 & $-$0.84 to $-$0.05 & 11/12 \\
+OMP-64, centred, calibrated length & $-$1.30 & $-$1.50 to $-$1.02 & 12/12 & $-$0.57 & $-$0.73 to $-$0.45 & 12/12 \\
+OMP-64, as shipped (official) & $-$230 & $-$3526 to $-$1.02 & 12/12 & $-$0.64 & $-$96.6 to $-$0.48 & 12/12 \\
+OMP-32, centred (our scikit-learn) & $-$0.90 & $-$1.20 to $-$0.23 & 12/12 & $-$0.44 & $-$0.64 to $-$0.19 & 11/12 \\
+Mean of word pieces (calibrated) & $-$5.99 & $-$8.87 to $-$4.84 & 12/12 & $-$1.83 & $-$2.64 to $-$1.11 & 12/12 \\
+\midrule
+\multicolumn{7}{l}{Zero-shot, ridge vs.\ unchanged receiver: better in 0, level in 3, worse in 9 of 12 runs} \\
+\multicolumn{7}{l}{After 200 steps, ridge vs.\ unchanged receiver: better in 9, level in 2, worse in 1 of 12 runs} \\
+\bottomrule
+\end{tabular}
