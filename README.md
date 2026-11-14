@@ -1,11 +1,11 @@
-# Calibrated ridge maps for token-embedding transplantation: code and results
+# Frequent anchors and one global map: code and results
 
-Code, notebooks and result files for the manuscript "Calibrated Ridge Maps for Token-Embedding Transplantation Across Language Models".
+Code, notebooks and result files for the manuscript "Frequent Anchors and One Global Map: A Closed-Form, Loss-Calibrated Initialiser for New Token Embeddings" (submitted to Neurocomputing). An earlier version of the manuscript was titled "Calibrated Ridge Maps for Token-Embedding Transplantation Across Language Models"; all of its code and results are kept here.
 Author: Shibdas Bhattacharya (23dp0094@iitism.ac.in), IIT (ISM) Dhanbad. Supervisor: Prof. Haider Banka.
 Licence: MIT (see `LICENSE`). Citation: see `CITATION.cff`.
 
 ## What the method is
-A new token is given an embedding by a linear map fitted on anchor tokens shared by the two vocabularies: ridge regression on mean-centred anchors (direction only), plus one length `c` chosen from a fixed grid by the receiver's loss on calibration sentences. Two anchor sets are tried (all anchors, the 5000 most frequent) and the training objective picks one. The least-squares baseline in the paper shares the centring, direction fitting and calibrated length, so ridge differs only by the penalty and, for the frequency-selected variant, the anchor subset.
+A new token is given an embedding by one global linear map fitted in closed form on anchor tokens shared by the two vocabularies: ridge regression on mean-centred anchors (direction only), plus one length `c` chosen from a fixed grid by the receiver's loss on calibration sentences. Two anchor sets are tried (all anchors, the 5000 most frequent in the training text) and the training objective picks one. The revision experiments show that the frequent anchors improve ridge, least squares and OMP alike, that the global map beats official OMP-64 even on the same anchors with the same length, and that ridge and least squares are equivalent with many anchors while ridge stays stable when anchors are scarce.
 
 ## Layout
 | Folder | Content |
@@ -18,6 +18,12 @@ A new token is given an embedding by a linear map fitted on anchor tokens shared
 ## Results folders
 | Folder | Content | Used for |
 |---|---|---|
+| `results/revision/v11_main/` | 12 PubMed runs (4 small pairs, seeds 0 to 2), same words and sentences as `v6_trainonly`, plus least squares and official OMP-64 on the 5000 frequent anchors, fixed length `c=1`, median-norm rescaling; abstract ids stored | Sections 5.3 and 5.4 (Tables 4 and 5, Fig. 4) |
+| `results/revision/v11_scale/` | same for GPT-2 large, Pythia-1B, Qwen2.5-1.5B, seed 0 | Tables 4 and 5, larger receivers |
+| `results/revision/awedist_25snippets_v8c/` | official AweDist at its default 25 snippets (31,500 abstracts read), TokDist, OMP-64; 4 small pairs, seed 1 | Section 5.7 (Tables 8 and 9) |
+| `results/revision/ablation_v2/` | ablations with training-only word choice, 4 small pairs, seeds 1 and 2 | Section 5.11 (Table 15) |
+| `results/revision/anchor_sweep_v3/` | least squares vs ridge with scarce anchors, training-only word choice | Section 5.12 (Table 16) |
+| `results/revision/stats/` | all test results (CSV) of the revision families | the tables above |
 | `results/v6_trainonly/` | 17 PubMed runs, word rule uses training text only (12 small-pair runs, seeds 0 to 2; GPT-2 large, Pythia-1B, Qwen2.5-1.5B) | main real-vocabulary tables, scale tables |
 | `results/abstract_ids/` | abstract of every evaluation sentence (v6 and arXiv) | abstract-level bootstrap |
 | `results/v9_learned/` | AweDist (official) and TokDist (ours) with ridge, five tied pairs, seed 1 | learned-baseline table |
@@ -26,12 +32,16 @@ A new token is given an embedding by a linear map fitted on anchor tokens shared
 | `results/v10_7b/` | Qwen2.5-7B zero-shot, seed 1 | 7B table |
 | `results/downstream_med_abstracts/` | medical-abstract classification after tokenizer swap | downstream table |
 | `results/runs16/`, `results/v5_small_and_scale/`, `results/other/` | earlier runs (sentence-selected words), scarce-anchor sweep | earlier tables, appendix |
-| `results/awedist_25snippets/` | error log of the AweDist default (25 snippets) attempt | explains why 5 snippets are used |
+| `results/awedist_25snippets/` | error log of the first AweDist default (25 snippets) attempt, on too little text | superseded by `results/revision/awedist_25snippets_v8c/` |
 | `results/environment*.json`, `environment_pip_freeze_kaggle.txt` | recorded environments | reproducibility |
 
 ## Notebook map
 | Notebook | Produces |
 |---|---|
+| `revision/v11_revision_main`, `revision/v11_revision_scale` | frequent-anchor and length-calibration runs (main and larger receivers) |
+| `revision/real_vocab_transplant_v8c_awedist_25_moretext` | official AweDist at its default 25 snippets |
+| `revision/ablation_ridge_v2_trainonly` | ablations, training-only words, seeds 1 and 2 in one run |
+| `revision/ls_vs_ridge_nll_sweep_v3_trainonly` | scarce-anchor NLL sweep, training-only words |
 | `real_vocab_transplant_v6_trainonly` | main PubMed runs (training-only word rule) |
 | `recover_abstract_ids_v6`, `recover_abstract_ids` | abstract ids of the evaluation sentences |
 | `real_vocab_transplant_v5_main`, `_v5_scale`, `_v5_scale_pythia1b`, `_v5_scale_qwen15b` | earlier seven-pair and larger-receiver runs |
@@ -49,6 +59,16 @@ A new token is given an embedding by a linear map fitted on anchor tokens shared
 | `speed_benchmark_ridge_vs_omp`, `ridge_fp32_vs_fp64_check`, `capture_environment` | timing, precision check, environment record |
 
 ## Rebuilding the tables
+Revision tables (run from the repository root):
+```
+python analysis/make_v11_stats.py results/revision/v11_main results/revision/stats/v11_main_stats.csv
+python analysis/make_v11_stats.py results/revision/v11_scale results/revision/stats/v11_scale_stats.csv
+python analysis/make_revision_stats.py      # AweDist (25 snippets) and ablation statistics
+python analysis/make_revision_tables.py     # Tables 4, 5, 8, 9, 15, 16 and Fig. 4 -> analysis/out_revision/
+```
+These reproduce the statistics files and the revision tables of the manuscript byte for byte.
+
+Earlier tables:
 ```
 cd analysis
 python make_v6_tables.py        # main, scale, learned-baseline and downstream tables + stats_v6.json
@@ -62,5 +82,7 @@ The output of these four scripts matches the tables in the manuscript byte for b
 - Receivers of 125M to 1.5B parameters, plus one 7B receiver tested zero-shot only; English text; PubMed (three seeds for small pairs) and arXiv (four pairs, one seed).
 - At 1B parameters and above no initialisation, ridge included, beat leaving the words split.
 - Seeds resample sentences and training batches; words, anchors and the text split are fixed.
-- SALT-ours, LS, Procrustes, OMP-32 and TokDist are our implementations. FOCUS, WECHSEL, OMP-64 (mergekit 0.1.5 `batch_omp`, copied verbatim) and AweDist (authors' script) are official code.
+- SALT-ours, LS, Procrustes, OMP-32 and TokDist are our implementations. FOCUS, WECHSEL, OMP-64 (mergekit 0.1.5 `batch_omp`, copied verbatim) and AweDist (authors' script, default 25 snippets) are official code.
+- The number of frequent anchors (5000) was fixed and not varied.
+- Figure 1 of the paper (`figures/fig_method_overview.drawio`) was created with Claude Opus 5.5 (Anthropic) as a draw.io file and checked by the authors.
 - Checkpoints are loaded from the `main` branch of the Hugging Face hub without pinned revisions.

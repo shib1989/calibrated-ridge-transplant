@@ -79,5 +79,13 @@ The four `make_*` scripts for the v6 set were rerun from this repository and rep
 - **7B** `v10_7b_zeroshot`: Qwen2.5-7B, float16 across two T4 GPUs (other runs use float32), zero-shot only, untied (input and output rows initialised), seed 1, Pythia-410m donor, same words and evaluation sentences as the Qwen2.5-1.5B pair. pip freeze in `results/v10_7b/`.
 - **Environment** of the v6, v9 and later runs: `results/v6_trainonly/environment.json`, `results/v9_learned/environment.json`, `results/environment_pip_freeze_kaggle.txt` (Python 3.13.16, torch 2.11.0+cu130, transformers 5.20.2, 2 x Tesla T4).
 
+## 7c. Revision experiments (Neurocomputing version)
+All use the training-only word rule and store the abstract of every evaluation sentence in the result file.
+- **Frequent anchors and length** `notebooks/revision/v11_revision_main` (`RUN_SET = "main"`, seeds 0 to 2) and `v11_revision_scale` (seed 0): same words and sentences as `v6_trainonly` (the shared conditions reproduce it exactly), plus least squares and official OMP-64 on the 5000 frequent anchors, `c = 1` and median-norm rescaling. Statistics: `analysis/make_v11_stats.py` (families F1 to F5, Holm within each).
+- **AweDist at its defaults** `notebooks/revision/real_vocab_transplant_v8c_awedist_25_moretext`: 25 snippets per word, corpus of 2800 training abstracts plus 29,700 further PubMedQA abstracts never used for evaluation; the official script reads 31,500 (its batches double from 500, so the corpus is kept one batch longer than the stopping point). Seed 1, four small pairs.
+- **Ablation** `notebooks/revision/ablation_ridge_v2_trainonly`: four small pairs, seeds 1 and 2 in one run.
+- **Scarce anchors** `notebooks/revision/ls_vs_ridge_nll_sweep_v3_trainonly`: two GPT-2 pairs, seed 1, five random anchor subsets per size.
+- Statistics and tables: `analysis/make_revision_stats.py` and `analysis/make_revision_tables.py` (outputs identical to the manuscript tables).
+
 ## 8. Run times seen (one GPU)
 GPT-2 or OPT-125m receivers with 82 or 300 words: 12 to 14 minutes per pair; GPT-2 large: 65 minutes; Pythia-1B: 71 minutes; Qwen2.5-1.5B: not recorded in the result file.

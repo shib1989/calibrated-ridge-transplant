@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or these results, please cite the paper."
-title: "Calibrated Ridge Maps for Token-Embedding Transplantation Across Language Models"
+title: "Frequent Anchors and One Global Map: A Closed-Form, Loss-Calibrated Initialiser for New Token Embeddings"
 authors:
   - family-names: Bhattacharya
     given-names: Shibdas
@@ -9,6 +9,5 @@ authors:
     given-names: Haider
     affiliation: "Department of Computer Science and Engineering, Indian Institute of Technology (Indian School of Mines), Dhanbad"
 type: software
-doi: 10.5281/zenodo.24058629
+doi: 10.5281/zenodo.24103555
 repository-code: "https://github.com/shib1989/calibrated-ridge-transplant"
-# NOTE: the doi above belongs to the first Zenodo release; replace it with the new version DOI after release v1.1.
