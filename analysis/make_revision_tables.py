@@ -28,9 +28,9 @@ def tally(rs):
     return b, len(rs) - b - w, w
 
 # ---------------------------------------------------------------- frequent anchors / global map
-SPEC = [("ridge[sel] vs OMP-64 freq5000 centred (cal)", "Ridge $-$ OMP-64, centred, same anchors, cal.\\ length"),
-        ("ridge[sel] vs OMP-64 freq5000 as shipped", "Ridge $-$ OMP-64 as shipped, same anchors"),
-        ("ridge[sel] vs LS[freq5000]", "Ridge $-$ least squares, same anchors"),
+SPEC = [("ridge[freq5000] vs OMP-64 freq5000 centred (cal)", "Ridge $-$ OMP-64, centred, same anchors, cal.\\ length"),
+        ("ridge[freq5000] vs OMP-64 freq5000 as shipped", "Ridge $-$ OMP-64 as shipped, same anchors"),
+        ("ridge[freq5000] vs LS[freq5000]", "Ridge $-$ least squares, same anchors"),
         ("ridge: freq5000 vs all", "Ridge: frequent $-$ all anchors"),
         ("LS: freq5000 vs all", "Least squares: frequent $-$ all anchors"),
         ("OMP-64 centred: freq5000 vs all", "OMP-64 centred: frequent $-$ all anchors")]
@@ -46,7 +46,7 @@ for key, lab in SPEC:
         v = [float(r["mean"]) for r in rs]; b, c, w = tally(rs)
         cells += [f"{b} / {c} / {w}", f2(np.median(v)), rng_fmt(v)]
     L.append(lab + " & " + " & ".join(cells) + " \\\\")
-    if key == "ridge[sel] vs LS[freq5000]": L.append("\\midrule")
+    if key == "ridge[freq5000] vs LS[freq5000]": L.append("\\midrule")
 L += ["\\bottomrule", "\\end{tabular}"]
 (TAB / "freq_global.tex").write_text("\n".join(L) + "\n")
 
@@ -146,7 +146,7 @@ L[-1] = "\\bottomrule"; L.append("\\end{tabular}")
 plt.rcParams.update({"font.size": 9})
 fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
 panels = [("ridge: freq5000 vs all", "Ridge", "#2a6fbb"), ("LS: freq5000 vs all", "Least squares", "#e08a1e"),
-          ("OMP-64 centred: freq5000 vs all", "OMP-64 centred", "#3a9a4a"), ("ridge[sel] vs OMP-64 freq5000 centred (cal)", "Ridge $-$ OMP-64,\nsame anchors", "#7a4fa0")]
+          ("OMP-64 centred: freq5000 vs all", "OMP-64 centred", "#3a9a4a"), ("ridge[freq5000] vs OMP-64 freq5000 centred (cal)", "Ridge $-$ OMP-64,\nsame anchors", "#7a4fa0")]
 for ax, st in zip(axes, ("0", "200")):
     for i, (key, lab, col) in enumerate(panels):
         rs = [r for r in main if r["test"] == key and r["stage"] == st]

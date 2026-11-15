@@ -110,12 +110,13 @@ write("realvocab_full", s + "\\bottomrule\n\\end{tabular}\n")
 # figure
 BLUE, INK = "#1f5fa8", "#222222"
 fig, axs = plt.subplots(1, 2, figsize=(6.8, 3.6), sharey=True)
+fig.suptitle("Ridge minus OMP-64 with centred inputs (negative = ridge better)", fontsize=8.5)
 keys = list(by.keys()); ys = np.arange(len(keys))[::-1]
 lab = lambda k: f"{k[0].replace(' <- ', '←').replace('Qwen2.5-0.5B', 'Qwen2.5').replace('-160m', '')} s{k[1]}"
 for ax, st, ttl in zip(axs, (0, 200), ("Zero-shot", "After 200 steps (new rows trained)")):
     for y, k in zip(ys, keys):
         t = by[k][st]["omp64c"]; ax.plot([t[1], t[2]], [y, y], color=BLUE, lw=1.3); ax.scatter(t[0], y, s=14, color=BLUE, zorder=3)
-    ax.axvline(0, color=INK, lw=0.8); ax.set_title(ttl, fontsize=8.5); ax.grid(axis="x", color="#ececE8", lw=0.6); ax.set_xlabel("Ridge minus OMP-64 (centred), nats / sentence")
+    ax.axvline(0, color=INK, lw=0.8); ax.set_title(ttl, fontsize=8.5); ax.grid(axis="x", color="#ececE8", lw=0.6); ax.set_xlabel("NLL difference (nats / sentence)")
 axs[0].set_yticks(ys); axs[0].set_yticklabels([lab(k) for k in keys], fontsize=6.5)
 fig.tight_layout(); fig.savefig(f"{OUT}/figures/fig_realvocab.pdf"); fig.savefig(f"{OUT}/figures/fig_realvocab.png", dpi=200); plt.close(fig)
 
@@ -148,18 +149,20 @@ STATS["fam"] = dict(n=len(fam), wins=len(wins), wins_holm=sum(f["holm"] for f in
                                   sum(1 for f in fam if f["b"] == b and f["m"] > 0 and sig(f["lo"], f["hi"]))] for b in FAM},
                     ns_list=[(f["pair"], f["st"], f["b"], round(f["m"], 2)) for f in nsig],
                     nonholm_wins_list=[(f["pair"], f["st"], f["b"], round(f["m"], 2), round(f["lo"], 2), round(f["hi"], 2)) for f in wins if not f["holm"]])
-cell = lambda t: f"{sg(t[0])}\\,[{sg(t[1])},{sg(t[2])}]" + ("$^{*}$" if sig(t[1], t[2]) else "")
-mcell = lambda t: (sg(t[0]) if abs(t[0]) < 100 else sg(t[0], 0)) + ("$^{*}$" if sig(t[1], t[2]) else "")
+HL = {(f["pair"], f["st"], f["b"]): f["holm"] for f in fam}   # Holm decisions of the 98-comparison family
+hm = lambda k: "$^{\\dagger}$" if HL.get(k) else ""
+cell = lambda t, k=None: f"{sg(t[0])}\\,[{sg(t[1])},{sg(t[2])}]" + ("$^{*}$" if sig(t[1], t[2]) else "") + hm(k)
+mcell = lambda t, k=None: (sg(t[0]) if abs(t[0]) < 100 else sg(t[0], 0)) + ("$^{*}$" if sig(t[1], t[2]) else "") + hm(k)
 b4 = lambda x: ("$+$" if x > 0 else "$-$") + f"{abs(x):.4f}"
 def table(cols, fn, name):
-    s = "\\begin{tabular}{ll" + "r" * len(cols) + "}\n\\toprule\nPair & Steps & " + " & ".join(dict(BASE)[b] for b in cols) + " \\\\\n\\midrule\n"
+    s = "\\begin{tabular}{ll" + "r" * len(cols) + "}\n\\toprule\nPair & Steps & " + " & ".join(dict(BASE + [("OMP-32", "OMP-32")])[b] for b in cols) + " \\\\\n\\midrule\n"
     for p in ORDER:
         for i, st in enumerate((0, 200)):
-            s += (tl(p) if i == 0 else "") + f" & {st} & " + " & ".join(fn(SC[p][st][b]) for b in cols) + " \\\\\n"
+            s += (tl(p) if i == 0 else "") + f" & {st} & " + " & ".join(fn(SC[p][st][b], (p, st, b)) for b in cols) + " \\\\\n"
         s += "\\addlinespace\n"
     write(name, s.rsplit("\\addlinespace\n", 1)[0] + "\\bottomrule\n\\end{tabular}\n")
 ALL = [b for b, _ in BASE]
-table(ALL, mcell, "scale_baselines"); table(ALL[:3], cell, "scale_ci_a"); table(ALL[3:], cell, "scale_ci_b")
+table(ALL, mcell, "scale_baselines"); table(ALL[:3], cell, "scale_ci_a"); table(ALL[3:6] + ["OMP-32", "original"], cell, "scale_ci_b")
 s = "\\begin{tabular}{llccccccc}\n\\toprule\nPair & Steps & " + " & ".join(b[1] for b in BASE) + " \\\\\n\\midrule\n"
 for p in ORDER:
     for i, st in enumerate((0, 200)):

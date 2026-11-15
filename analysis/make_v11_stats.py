@@ -4,6 +4,9 @@ Every test is a paired comparison on the evaluation sentences that contain the n
 Resampling unit: the abstract (cluster bootstrap, 5000 draws, 95% percentile interval). Multiplicity: Holm step-down within each declared family, with
 normal-approximation p-values. Seeds of one pair are treated as separate runs, as in the earlier analysis (they are repeated measures of one setup; state this in the paper).
 Families are declared here, before any result is read.
+Revision after an external audit (15 Nov 2026): in F1 and F2 the ridge side is ridge[freq5000] rather than the selected variant, so that
+both methods use exactly the same 5000 frequent anchors in every run (the selected variant used all anchors in 2 of the 12 small-pair runs).
+The number of tests and the order of resampling are unchanged, so the other families are unaffected.
 """
 import sys, glob, pickle, csv, collections, numpy as np
 from scipy.stats import norm
@@ -11,9 +14,9 @@ from cluster_boot import boot_se
 
 SEL = "ridge[sel]"                       # resolved per run from res["sel"]
 FAMILIES = {   # name -> list of (label, A, B, stages)
- "F1 ridge vs least squares on the SAME frequent anchors (R10)": [("ridge[sel] vs LS[freq5000]", SEL, "LS[freq5000] (cal)", (0, 200))],
- "F2 ridge vs official OMP-64 on the SAME frequent anchors (R7)": [("ridge[sel] vs OMP-64 freq5000 centred (cal)", SEL, "OMP-64 freq5000 centred (cal)", (0, 200)),
-                                                                   ("ridge[sel] vs OMP-64 freq5000 as shipped", SEL, "OMP-64 freq5000 as shipped (raw)", (0, 200))],
+ "F1 ridge vs least squares on the SAME frequent anchors (R10)": [("ridge[freq5000] vs LS[freq5000]", "ridge[freq5000]", "LS[freq5000] (cal)", (0, 200))],
+ "F2 ridge vs official OMP-64 on the SAME frequent anchors (R7)": [("ridge[freq5000] vs OMP-64 freq5000 centred (cal)", "ridge[freq5000]", "OMP-64 freq5000 centred (cal)", (0, 200)),
+                                                                   ("ridge[freq5000] vs OMP-64 freq5000 as shipped", "ridge[freq5000]", "OMP-64 freq5000 as shipped (raw)", (0, 200))],
  "F3 effect of the frequent-anchor choice, per method (R7, R10): frequent minus all": [("ridge: freq5000 vs all", "ridge[freq5000]", "ridge[all]", (0, 200)),
                                                                                        ("LS: freq5000 vs all", "LS[freq5000] (cal)", "LS (cal)", (0, 200)),
                                                                                        ("OMP-64 centred: freq5000 vs all", "OMP-64 freq5000 centred (cal)", "OMP-64 centred (cal)", (0, 200))],
